@@ -70,6 +70,9 @@ static final+变量;  表示**全局的不允许被修改的变量**
   - 存储在方法区
   - get/set也是静态的
   - 如果在方法区中有局部变量与static修饰的成员变量同名时，在静态变量前加“类名.”进行区分
+- [静态代码块](#类的初始化)
+  - 每个类的静态代码块只会执行一次
+  - 静态代码块在第一次使用这个类**之前**执行，即在类初始化时执行
 
 
 
@@ -114,3 +117,122 @@ static final+变量;  表示**全局的不允许被修改的变量**
       局部变量：随着方法的进栈而诞生，随着方法出栈而消失
     
       成员变量：随着对象的创建而诞生，随着对象被垃圾回收而消失
+
+# 类的初始化
+
+执行类的初始化方法<clinit>()
+
+类初始化方法，一个类只有一个，也是编译器生成的，由两部分组成
+
+1. 静态变量的显示赋值代码
+2. 静态代码块的代码
+
+1，2是按照顺序执行的
+
+
+
+# 实例初始化
+
+非静态代码块什么时候执行？
+
+- 在**每次**创建对象的时候执行
+- 比构造器早
+
+```java
+public class NStaticTest {
+    public static void main(String[] args) {
+        TestBlock testBlock = new TestBlock();
+        TestBlock testBlock1 = new TestBlock("ddd");
+    }
+}
+
+class TestBlock {
+    private String str;
+    TestBlock() {
+        System.out.println("无参构造器");
+    }
+    {
+        System.out.println("非静态代码块");
+    }
+    public TestBlock(String str) {
+        this.str = str;
+        System.out.println("有参构造");
+    }
+}
+```
+
+执行结果：
+
+非静态代码块
+无参构造器
+非静态代码块
+有参构造
+
+实例初始化过程，创建对象时，为对象进行初始化的操作
+
+1. 为成员变量**显式**赋值
+2. 执行非静态代码块
+3. 执行构造器
+
+1和2按先后顺序执行，**3 一定是最后执行的**
+
+```java
+public class NStaticTest {
+    public static void main(String[] args) {
+        TestBlock testBlock = new TestBlock();
+        TestBlock testBlock1 = new TestBlock("ddd");
+    }
+}
+
+class TestBlock {
+    private String str=str();
+    TestBlock() {
+        System.out.println("无参构造器");
+    }
+    {
+        System.out.println("非静态代码块");
+    }
+    public TestBlock(String str) {
+        this.str = str;
+        System.out.println("有参构造");
+    }
+
+    public String str() {
+        System.out.println("str方法");
+        return "dd";
+    }
+}
+```
+
+执行结果
+
+str方法
+非静态代码块
+无参构造器
+str方法
+非静态代码块
+有参构造
+
+Java编译器其实会把三个部分的代码，合成一个叫做<init>(形参列表)实例初始化方法
+
+即编译后的.class字节码信息中，没有构造器的概念
+
+
+
+有几个构造器就有几个实例初始化方法。那么当你创建对象的时候，调用对应的构造器时，其实执行的是对应的实例初始化方法<init>(.....)
+
+![image-20210228140406644](java核心知识.assets/image-20210228140406644.png)
+
+![image-20210228140742621](java核心知识.assets/image-20210228140742621.png)
+
+# this
+
+用法
+
+1. this.属性:当局部变量与成员变量同名时，可以再成员变量前面加this
+2. this.方法：没有非用不可的时候
+3. this()或this(实参列表)：this()表示调用本类的无参构造 ，this(实参列表)表示调用本类的有参构造
+
+**this()或this(实参列表)必须在构造器的首行**
+
+![image-20210228142053840](java核心知识.assets/image-20210228142053840.png)

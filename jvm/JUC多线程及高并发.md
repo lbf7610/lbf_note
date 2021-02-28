@@ -59,6 +59,51 @@ public class VolatileDemo {
 
 
 
+```java
+//原子性
+
+class MyData{
+    volatile int num = 0;
+    public  void addTo60() {
+        this.num = 60;
+    }
+    public synchronized void addPlusPlus() {num++;}
+}
+
+/**
+ * 1,验证volatile的可见性
+ *    假如int num = 0,num前没有volatile修饰,没有可见性
+ *    添加volatile可以解决可见性问题
+ * 2，验证volatile不保证原子性
+ *      原子性就是不可分割，完整性，即某个线程在做某个具体业务时，中间不可以被分割，需要完整
+ *      要么同时成功，要么同时失败
+ */
+public class VolatileDemo {
+    public static void main(String[] args) {
+        //seeOkByVolatile();
+        MyData myData = new MyData();
+        for (int i = 0; i < 20; i++) {
+            new Thread(() -> {
+                for (int j = 0; j < 1000; j++) {
+                    myData.addPlusPlus();
+                }
+            },String.valueOf(i)).start();
+        }
+        //yield,暂停当前线程，让出本次的cpu资源，加入下一次cpu的抢夺中
+        //active count返回当前活跃的线程数，至少有main和GC
+        while (Thread.activeCount() > 2 ) {
+            Thread.yield();//当线程数大于2时继续执行，直到剩余线程只有2个
+        }
+        //直到循环完了，mian线程才下的来
+        System.out.println(Thread.currentThread().getName() + "\t final value : " + myData.num);
+    }
+}
+```
+
+
+
+
+
 **JMM**关于同步的规定：
 
 1. 线程解锁前，必须把共享变量的值刷新回主内存

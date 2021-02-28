@@ -444,20 +444,77 @@ public class Test2 {
 
 特殊情况：
 
-- 如果成员变量既是static，又是final ，即常量，则不会被初始化
+- 如果成员变量既是static，又是final ，即全局常量，则不会被初始化
 
-- 上一种情况中，如果常量的值 是一个随机值，则会被初始化 (为了安全)
+- 上一种情况中，如果常量的值 是一个随机值（int）Math.random()*100，则会被初始化 (为了安全，在初始化后才产生随机数)
 
-  **常量（final static）产生的时机：编译期间，调用这个常量的方法所在类的常量池**
+- 这个是一个确定的数时才不会被初始化
+
+  全局**常量（final static）产生的时机：编译期间，调用这个常量的方法所在类的常量池**
   
   ```java
+  public class ConstantTest {
+      public static void main(String[] args) {
+          System.out.println(Son.i);//i来自于father
+  
+      }
+  }
+  
+  class Father {
+      public static int i = 10;
+      static {
+          System.out.println("father...");
+      }
+  }
+  
+  class Son extends Father {
+      static {
+          System.out.println("son...");
+      }
+  }
   
   ```
   
+  执行结果
   
+  father...
+  10
+  
+  i来自father类所以会调用father
+  
+  ```java 
+  public class ConstantTest {
+      public static void main(String[] args) {
+          System.out.println(Son.i);
+  
+      }
+  }
+  
+  class Father {
+      public static int i = 10;
+      static {
+          System.out.println("father...");
+      }
+  }
+  
+  class Son extends Father {
+      public static int i = 100;
+      static {
+          System.out.println("son...");
+      }
+  }
+  ```
+  
+  执行结果
+  
+  father...
+  son...
+  100
+  
+  初始化子类，父类也会被初始化
 
 3. 使用Class.forName("init.B")执行反射时使用的类（B类）
-4. 初始化一个子类时，该子类的父类也会被初始化
+4. 初始化一个子类时，该子类的**父类**也会被初始化
 
 ```java
 public class Son extends  Father {
@@ -494,7 +551,7 @@ public class BeiDong {
 
 ```
 
-以上代码，不属于主动使用类，因此不会被初始化。
+以上代码，不属于主动使用类，因此**不会被初始化**。
 
 
 
@@ -822,7 +879,7 @@ map.put( id   ,   obj ) ;
 
 
 
-Map.put(id,  软引用(obj) )；//当jvm内存不足时，会主动回收。
+Map.put(id,  软引用(obj) )；/**/当jvm内存不足时，会主动回收**。
 
 
 

@@ -19,11 +19,11 @@ spring.profiles.active=dev
 
 #阿里云 OSS
 #不同的服务器，地址不同
-aliyun.oss.file.endpoint=oss-cn-chengdu.aliyuncs.com
-aliyun.oss.file.keyid=LTAI4FyW1tWaaBgUbF2Vj2w7
-aliyun.oss.file.keysecret=Y2Ser92HgL1nDY3KbEaY30j3Q0K3ep
+aliyun.oss.file.endpoint=
+aliyun.oss.file.keyid=
+aliyun.oss.file.keysecret=
 #bucket可以在控制台创建，也可以使用java代码创建
-aliyun.oss.file.bucketname=edu-210205
+aliyun.oss.file.bucketname=
 ~~~
 
 ## 创建工具类读取配置文件信息

@@ -334,3 +334,9 @@ export default {
 ![image-20210308215758698](day06.assets/image-20210308215758698.png)
 
 ![image-20210308215820330](day06.assets/image-20210308215820330.png)
+
+读操作
+
+![12-EasyExcel读操作](day06.assets/12-EasyExcel读操作.png)
+
+![13-EasyExcel读操作分类](day06.assets/13-EasyExcel读操作分类.png)

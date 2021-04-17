@@ -319,3 +319,8 @@ public void testSelectListColumn() {
 }
 ~~~
 
+# MyBatis-Plus Service CRUD 接口 跟Mapper CRUD 接口区别
+
+Service CRUD 返回的boolean的值，Mapper CRUD 返回的是int值。
+
+service是mapper的增强，有批处理的方法
